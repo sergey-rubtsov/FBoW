@@ -76,10 +76,6 @@ option(BUILD_TESTS "Set to ON to build tests" OFF)
 option(BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON)
 option(USE_CONTRIB "Set ON to use OpenCV contrib modules" OFF)
 
-option(USE_AVX "Set on/off" ON)
-option(USE_SSE3 "Set on/off" ON)
-option(USE_SSE4 "Set on/off" ON)
-
 # ------------------------------------------------------
 #   find dependencies
 # ------------------------------------------------------
@@ -135,7 +131,16 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang" 
     set(ENABLE_PROFILING OFF CACHE BOOL "Enable profiling in the GCC/Clang compiler (Add flags: -g -pg)")
     # option for omitting frame pointer
     set(USE_OMIT_FRAME_POINTER ON BOOL "Enable -fomit-frame-pointer for GCC/Clang")
-
+    # Raspberri Pi
+    if(${CMAKE_SYSTEM_PROCESSOR} MATCHES armv7l)
+        option(USE_AVX "Set on/off" OFF)
+        option(USE_SSE3 "Set on/off" OFF)
+        option(USE_SSE4 "Set on/off" OFF)
+    else()
+        option(USE_AVX "Set on/off" ON)
+        option(USE_SSE3 "Set on/off" ON)
+        option(USE_SSE4 "Set on/off" ON)
+    endif()
     # select optimization level
     if(${CMAKE_SYSTEM_PROCESSOR} MATCHES arm*)
         # ARM system
